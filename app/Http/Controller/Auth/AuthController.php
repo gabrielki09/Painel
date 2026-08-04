@@ -29,7 +29,8 @@ class AuthController
 
         return apiSuccess(
             'Usuário cadastrado com sucesso!',
-            $this->authService->register($data)
+            $this->authService->register($data),
+            201
         );
     }
 

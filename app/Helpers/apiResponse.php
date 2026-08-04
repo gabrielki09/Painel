@@ -3,11 +3,10 @@
 function apiSuccess(
     string $message = 'Sucesso!',
     mixed $data = [],
-    ?bool $success = true,
     ?int $status = 200
 ) {
     return response()->json([
-        'success' => $success,
+        'success' => true,
         'message' => $message,
         'data' => $data,
         'status' => $status
@@ -18,11 +17,10 @@ function apiSuccess(
 function apiError(
     string $message,
     mixed $data = [],
-    ?bool $success = false,
     ?int $status = 400
 ) {
     return response()->json([
-        'success' => $success,
+        'success' => false,
         'message' => $message,
         'data' => $data,
         'status' => $status

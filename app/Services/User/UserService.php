@@ -5,7 +5,7 @@ namespace App\Services\User;
 use App\Models\User;
 use App\Repositories\Interface\User\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-
+use Illuminate\Support\Facades\Hash;
 
 class UserService
 {
@@ -15,7 +15,13 @@ class UserService
 
     public function create(array $data)
     {
-        return $this->userRepository->create($data);
+        return $this->userRepository->create([
+            'first_name' => trim($data['first_name']),
+            'last_name' => trim($data['last_name']),
+            'email' => mb_strtolower(trim($data['email'])),
+            'document' => $data['document'],
+            'password' => Hash::make($data['password']),
+        ]);
     }
 
     public function findById(int $id): ?User
@@ -36,9 +42,15 @@ class UserService
         return $user;
     }
 
-    public function update(int $id, User $data): User
+    public function update(int $id, array $data): User
     {
-        $user = $this->userRepository->update($id, $data);
+        $user = $this->userRepository->update($this->findById($id), [
+            'first_name' => trim($data['first_name']),
+            'last_name' => trim($data['last_name']),
+            'email' => mb_strtolower(trim($data['email'])),
+            'document' => $data['document'],
+            'password' => Hash::make($data['password']),
+        ]);
 
         return $user;
     }
