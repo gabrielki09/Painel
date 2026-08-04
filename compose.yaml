@@ -1,0 +1,14 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: ./dockerfile.dev
+    container_name: api
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8080:8080"
+    env_file:
+      - /.env
+    command: php artisan serve --host=0.0.0.0 --port=8080

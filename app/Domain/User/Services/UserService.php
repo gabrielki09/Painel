@@ -5,6 +5,8 @@ namespace App\Domain\User\Services;
 use App\Domain\User\Entities\User;
 use App\Domain\User\Repositories\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class UserService
 {
@@ -12,19 +14,28 @@ class UserService
         private UserRepositoryInterface $userRepository
     ){}
 
-    public function create(User $user)
-    {
+    public function create(
+        string $firstName,
+        string $lastName,
+        string $email,
+        string $document,
+        string $passwordHash,
+    ) {
 
+        return $this->userRepository->create(new User(
+            $firstName,
+            $lastName,
+            $email,
+            $document,
+            Hash::make($passwordHash),
+        ));
     }
 
     public function findById(int $id): ?User
     {
         $user = $this->userRepository->findById($id);
 
-        if (! $user )
-        {
-            throw new ModelNotFoundException('Usuário não locaizado.');
-        }
+        if (! $user ) throw new ModelNotFoundException('As credenciais informadas são inválidas.');
 
         return $user;
     }
@@ -33,10 +44,7 @@ class UserService
     {
         $user = $this->userRepository->findByEmail($email);
 
-        if (! $user )
-        {
-            throw new ModelNotFoundException('Usuário não locaizado.');
-        }
+        if (! $user ) throw new ModelNotFoundException('Usuário não locaizado.');
 
         return $user;
     }
