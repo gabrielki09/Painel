@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Domain\User\Services;
+namespace App\Services\User;
 
-use App\Domain\User\Entities\User;
-use App\Domain\User\Repositories\UserRepositoryInterface;
+use App\Models\User;
+use App\Repositories\Interface\User\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
+
 
 class UserService
 {
@@ -14,21 +13,9 @@ class UserService
         private UserRepositoryInterface $userRepository
     ){}
 
-    public function create(
-        string $firstName,
-        string $lastName,
-        string $email,
-        string $document,
-        string $passwordHash,
-    ) {
-
-        return $this->userRepository->create(new User(
-            $firstName,
-            $lastName,
-            $email,
-            $document,
-            Hash::make($passwordHash),
-        ));
+    public function create(array $data)
+    {
+        return $this->userRepository->create($data);
     }
 
     public function findById(int $id): ?User

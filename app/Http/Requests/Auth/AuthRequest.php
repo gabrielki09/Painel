@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Infrastructure\Http\Requests\Auth;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
-use Override;
 
 class AuthRequest extends FormRequest
 {
@@ -27,8 +26,8 @@ class AuthRequest extends FormRequest
         return [
             'first_name' => ['required', 'max:120', 'min:6'],
             'last_name' => ['required', 'max:120', 'min:6'],
-            'email' => ['required', 'email'],
-            'document' => ['required', 'cpf'],
+            'email' => ['required', 'email', 'unique:\\App\\Models\\User,email'],
+            'document' => ['required', 'cpf', 'unique:\\App\\Models\\User,document'],
             'password' => [
                 'required',
                 Password::min(8)
@@ -53,20 +52,17 @@ class AuthRequest extends FormRequest
 
             'email.required' => 'O e-mail é obrigatório',
             'email.email' => 'O e-mail precisa estar em um formatao válido.',
+            'email.unique' => 'E-mail já cadastrado.',
 
             'document.required' => 'O documento é obrigatório.',
             'document.cpf' => 'O documento precisa estar em um formato válido.',
+            'document.unique' => 'Documento já cadastrado.',
 
             'password.required' => 'A senha é obrigatória.',
             'password.min' => 'A senha precisa conter ao menos :min caracteres.',
             'password.mixedCase' => 'A senha precisa de letras maiúsculas e minúsculas.',
             'password.numbers' => 'A senha precisa conter números.',
             'password.symbols' => 'A senha precisa conter ao menos um caracter especial.',
-
-                //->mixedCase()
-                //->numbers()
-                //->symbols()
-                //->uncompromised(),
         ];
     }
 }
